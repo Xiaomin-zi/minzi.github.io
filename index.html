@@ -23,7 +23,6 @@
             height: 100%;
             z-index: 0;
         }
-
         /* ---- 内容层（视频 + 文字 + 星星按钮） ---- */
         .overlay {
             position: relative;
@@ -53,7 +52,6 @@
             margin-bottom: 30px;
             pointer-events: none;
         }
-
         /* ---- 视频容器（修正） ---- */
         .video-container {
             pointer-events: auto;
@@ -84,7 +82,6 @@
             border: 0;
             border-radius: 20px;
         }
-
         /* ---- 星星按钮（右下角） ---- */
         .star-button {
             position: fixed;
@@ -119,7 +116,6 @@
             0% { opacity: 0.8; transform: scale(1); }
             100% { opacity: 1; transform: scale(1.1); }
         }
-
         /* ---- 响应式 ---- */
         @media (max-width: 600px) {
             .overlay h1 { font-size: 2rem; }
@@ -129,38 +125,32 @@
     </style>
 </head>
 <body>
-
     <!-- 流星雨画布 -->
     <canvas id="meteorCanvas"></canvas>
-
     <!-- 内容层 -->
     <div class="overlay">
         <h1>🌠 嘿！这是小敏子的秘密基地</h1>
         <p>快看！有流星雨 ✨</p>
-
-        <!-- 视频容器（修正：使用正确的 B站嵌入代码） -->
+        <!-- 视频容器：增加loop=1开启循环播放 -->
         <div class="video-container">
             <div class="video-wrapper">
                 <iframe 
-                    src="https://player.bilibili.com/player.html?bvid=BV1e94Q6GEbF&page=1&high_quality=1&danmaku=0"
+                    src="https://player.bilibili.com/player.html?bvid=BV1e94Q6GEbF&page=1&high_quality=1&danmaku=0&loop=1&autoplay=1"
                     allowfullscreen>
                 </iframe>
             </div>
         </div>
     </div>
-
     <!-- 星星按钮 → 跳转到 yinhe.html -->
     <a href="yinhe.html" class="star-button" title="去银河相册">
         ⭐
     </a>
-
     <script>
         // ================== 流星雨脚本 ==================
         (function() {
             const canvas = document.getElementById('meteorCanvas');
             const ctx = canvas.getContext('2d');
             let width, height;
-
             const CONFIG = {
                 starCount: 200,
                 meteorChance: 0.06,
@@ -170,16 +160,13 @@
                 meteorColor: '255, 200, 100',
                 angleSpread: 0.09
             };
-
             let stars = [];
             let meteors = [];
-
             function init() {
                 width = window.innerWidth;
                 height = window.innerHeight;
                 canvas.width = width;
                 canvas.height = height;
-
                 stars = [];
                 for (let i = 0; i < CONFIG.starCount; i++) {
                     stars.push({
@@ -192,7 +179,6 @@
                     });
                 }
             }
-
             function createMeteor() {
                 const startX = width * (0.75 + Math.random() * 0.35);
                 const startY = height * (-0.05 + Math.random() * 0.25);
@@ -208,7 +194,6 @@
                     decay: 0.007 + Math.random() * 0.005
                 };
             }
-
             function updateMeteors() {
                 if (Math.random() < CONFIG.meteorChance) {
                     meteors.push(createMeteor());
@@ -224,7 +209,6 @@
                 }
                 if (meteors.length > 100) meteors.splice(0, meteors.length - 100);
             }
-
             function draw() {
                 ctx.clearRect(0, 0, width, height);
                 const grad = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, Math.max(width, height)/1.5);
@@ -232,7 +216,6 @@
                 grad.addColorStop(1, '#080816');
                 ctx.fillStyle = grad;
                 ctx.fillRect(0, 0, width, height);
-
                 const time = Date.now() / 1000;
                 for (let star of stars) {
                     const twinkle = 0.6 + 0.4 * Math.sin(time * star.twinkleSpeed + star.phase);
@@ -241,7 +224,6 @@
                     ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha * twinkle})`;
                     ctx.fill();
                 }
-
                 for (let m of meteors) {
                     const len = Math.hypot(m.vx, m.vy);
                     if (len === 0) continue;
@@ -266,13 +248,11 @@
                     ctx.shadowBlur = 0;
                 }
             }
-
             function animate() {
                 updateMeteors();
                 draw();
                 requestAnimationFrame(animate);
             }
-
             window.addEventListener('resize', init);
             init();
             animate();
